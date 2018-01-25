@@ -42,15 +42,15 @@ class Shader {
 		trace("Building "+name+"...");
 		linked = false;
 		destroy();
-		program = SmashGL.CreateProgram();
+		program = GL.CreateProgram();
 		var error = false;
 		for (source in sources)
 		{
 			var shader:GLShader = switch(source){
 				case Fragment(src):
-					compile(src, SmashGL.GL_FRAGMENT_SHADER);
+					compile(src, GL.GL_FRAGMENT_SHADER);
 				case Vertex(src):
-					compile(src, SmashGL.GL_VERTEX_SHADER);
+					compile(src, GL.GL_VERTEX_SHADER);
 				case Other(src, type):
 					compile(src, type);
 			}
@@ -58,8 +58,8 @@ class Shader {
 				error = true;
 				break;
 			}
-			SmashGL.AttachShader(program, shader);
-			SmashGL.DeleteShader(shader);
+			GL.AttachShader(program, shader);
+			GL.DeleteShader(shader);
 		}
 
 		if(error){
@@ -68,12 +68,12 @@ class Shader {
 			return;
 		}
 
-		SmashGL.LinkProgram(program);
+		GL.LinkProgram(program);
 		var status = [];
-		SmashGL.GetProgramiv(program, SmashGL.GL_LINK_STATUS, status);
+		GL.GetProgramiv(program, GL.GL_LINK_STATUS, status);
 		if (status[0] == 0)
 		{
-			var log = SmashGL.GetProgramInfoLog(program);
+			var log = GL.GetProgramInfoLog(program);
 			trace(name+": "+log);
 			destroy();
 			return;
@@ -87,16 +87,16 @@ class Shader {
 
 	private function compile(source:String, type:Int):GLShader
 	{
-		var shader = SmashGL.CreateShader(type);
+		var shader = GL.CreateShader(type);
 		untyped __cpp__("glShaderSource({0},1,&{1}.__s,0)", shader, source);
-		SmashGL.CompileShader(shader);
+		GL.CompileShader(shader);
 		var status = [0];
-		SmashGL.GetShaderiv(shader, SmashGL.GL_COMPILE_STATUS, status);
+		GL.GetShaderiv(shader, GL.GL_COMPILE_STATUS, status);
 		if (status[0] == 0)
 		{
-			var log = SmashGL.GetShaderInfoLog(shader);
+			var log = GL.GetShaderInfoLog(shader);
 			trace(this.name+": "+log);
-			SmashGL.DeleteShader(shader);
+			GL.DeleteShader(shader);
 			return -1;
 		}
 
@@ -105,7 +105,7 @@ class Shader {
 
 	public inline function getAttribute(a:String):GLAttributeLocation
 	{
-		var pos =  SmashGL.GetAttribLocation(program, a);
+		var pos =  GL.GetAttribLocation(program, a);
 		#if debug
 		if(pos==-1)	throw "Couldn't find attribute "+a;
 		#end
@@ -114,23 +114,23 @@ class Shader {
 
 	public inline function getUniform(u:String):GLUniformLocation
 	{
-		var pos = SmashGL.GetUniformLocation(program, u);
+		var pos = GL.GetUniformLocation(program, u);
 		return pos;
 	}
 
 	public function bind()
 	{
-		SmashGL.UseProgram(program);
+		GL.UseProgram(program);
 	}
 
 	public function release()
 	{
-		SmashGL.UseProgram(0);
+		GL.UseProgram(0);
 	}
 
 	public function destroy()
 	{
-		SmashGL.DeleteProgram(program);
+		GL.DeleteProgram(program);
 	}
 
 }

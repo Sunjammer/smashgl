@@ -1,5 +1,7 @@
 package smashgl;
-import lime.graphics.opengl.*;
+import lime.graphics.opengl.GL;
+import lime.graphics.opengl.GLBuffer;
+import lime.graphics.opengl.GLUniformLocation;
 import lime.utils.Float32Array;
 import glm.*;
 using smashgl.GLMExt;

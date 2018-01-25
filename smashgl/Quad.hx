@@ -1,5 +1,6 @@
 package smashgl;
-import lime.graphics.opengl.*;
+import lime.graphics.opengl.GL;
+import lime.graphics.opengl.GLBuffer;
 import lime.utils.Float32Array;
 
 class Quad {

@@ -1,6 +1,6 @@
 package smashgl;
 
-import lime.graphics.opengl.*;
+import lime.graphics.opengl.GL;
 import openfl.Assets;
 
 class TextureUtils{

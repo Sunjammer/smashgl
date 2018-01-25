@@ -2,7 +2,7 @@ package smashgl;
 
 
 @:build(smashgl.Build.init("opengl.GL"))
-class SmashGL{
+class GL{
 
     public static inline function init() : Void
     {
