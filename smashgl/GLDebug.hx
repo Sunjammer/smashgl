@@ -1,6 +1,5 @@
 package smashgl;
 
-import opengl.GL;
 import haxe.macro.Context;
 import haxe.macro.Expr;
 
