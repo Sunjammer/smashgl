@@ -42,15 +42,15 @@ class Shader {
 		trace("Building "+name+"...");
 		linked = false;
 		destroy();
-		program = GL.CreateProgram();
+		program = GL.createProgram();
 		var error = false;
 		for (source in sources)
 		{
 			var shader:GLShader = switch(source){
 				case Fragment(src):
-					compile(src, GL.GL_FRAGMENT_SHADER);
+					compile(src, GL.FRAGMENT_SHADER);
 				case Vertex(src):
-					compile(src, GL.GL_VERTEX_SHADER);
+					compile(src, GL.VERTEX_SHADER);
 				case Other(src, type):
 					compile(src, type);
 			}
@@ -58,8 +58,8 @@ class Shader {
 				error = true;
 				break;
 			}
-			GL.AttachShader(program, shader);
-			GL.DeleteShader(shader);
+			GL.attachShader(program, shader);
+			GL.deleteShader(shader);
 		}
 
 		if(error){
@@ -68,12 +68,12 @@ class Shader {
 			return;
 		}
 
-		GL.LinkProgram(program);
+		GL.linkProgram(program);
 		var status = [];
-		GL.GetProgramiv(program, GL.GL_LINK_STATUS, status);
+		GL.getProgramiv(program, GL.LINK_STATUS, status);
 		if (status[0] == 0)
 		{
-			var log = GL.GetProgramInfoLog(program);
+			var log = GL.getProgramInfoLog(program);
 			trace(name+": "+log);
 			destroy();
 			return;
@@ -87,16 +87,16 @@ class Shader {
 
 	private function compile(source:String, type:Int):GLShader
 	{
-		var shader = GL.CreateShader(type);
+		var shader = GL.createShader(type);
 		untyped __cpp__("glShaderSource({0},1,&{1}.__s,0)", shader, source);
-		GL.CompileShader(shader);
+		GL.compileShader(shader);
 		var status = [0];
-		GL.GetShaderiv(shader, GL.GL_COMPILE_STATUS, status);
+		GL.getShaderiv(shader, GL.COMPILE_STATUS, status);
 		if (status[0] == 0)
 		{
-			var log = GL.GetShaderInfoLog(shader);
+			var log = GL.getShaderInfoLog(shader);
 			trace(this.name+": "+log);
-			GL.DeleteShader(shader);
+			GL.deleteShader(shader);
 			return -1;
 		}
 
@@ -105,7 +105,7 @@ class Shader {
 
 	public inline function getAttribute(a:String):GLAttributeLocation
 	{
-		var pos =  GL.GetAttribLocation(program, a);
+		var pos =  GL.getAttribLocation(program, a);
 		#if debug
 		if(pos==-1)	throw "Couldn't find attribute "+a;
 		#end
@@ -114,23 +114,23 @@ class Shader {
 
 	public inline function getUniform(u:String):GLUniformLocation
 	{
-		var pos = GL.GetUniformLocation(program, u);
+		var pos = GL.getUniformLocation(program, u);
 		return pos;
 	}
 
 	public function bind()
 	{
-		GL.UseProgram(program);
+		GL.useProgram(program);
 	}
 
 	public function release()
 	{
-		GL.UseProgram(0);
+		GL.useProgram(0);
 	}
 
 	public function destroy()
 	{
-		GL.DeleteProgram(program);
+		GL.deleteProgram(program);
 	}
 
 }

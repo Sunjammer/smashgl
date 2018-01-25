@@ -19,8 +19,11 @@ class Build{
         var toInject:Array<Field> = [];
 
         inline function strip(input:String):String{
-            if(input.indexOf("gl")==0)
-                return input.substring(2);
+            input = input.split("GL_").join("");
+            if(input.indexOf("gl")==0){
+                var str = input.substring(2);
+                return str.substr(0, 1).toLowerCase() + str.substr(1);
+            }
             return input;
         }
 
