@@ -1,6 +1,5 @@
 package smashgl;
 
-import lime.graphics.opengl.GL;
 import openfl.Assets;
 
 class TextureUtils{
@@ -27,7 +26,7 @@ class TextureUtils{
 			case GL.FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
 				trace("FRAMEBUFFER_INCOMPLETE_ATTACHMENT");
 			case GL.FRAMEBUFFER_UNSUPPORTED:
-				trace("GL_FRAMEBUFFER_UNSUPPORTED");
+				trace("FRAMEBUFFER_UNSUPPORTED");
 			case GL.FRAMEBUFFER_COMPLETE:
 			default:
 				trace("Check frame buffer: " + status);
@@ -37,7 +36,9 @@ class TextureUtils{
     }
 
 	static public inline function createRenderTargetTexture(width:Int, height:Int){
-        var tex = GL.createTexture();
+		var tmp = [0];
+        GL.createTextures(GL.TEXTURE_2D, 1, tmp);
+		var tex = tmp[0];
         GL.bindTexture(GL.TEXTURE_2D, tex);
         GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGB16F, width, height, 0, GL.RGB, GL.UNSIGNED_BYTE, 0);
         GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, GL.CLAMP_TO_EDGE);
@@ -50,14 +51,17 @@ class TextureUtils{
 
 	static public inline function createTexture(width:Int, height:Int, repeat:Bool = false, format:Int = GL.RGBA, filter:Int = GL.LINEAR)
 	{
-		var tex = GL.createTexture();
+		var tmp = [0];
+		trace("Yeah!");
+		GL.createTextures(GL.TEXTURE_2D, 1, tmp);
+		var tex = tmp[0];
 		GL.bindTexture(GL.TEXTURE_2D, tex);
-		GL.texImage2D(GL.TEXTURE_2D, 0, format, width, height,  0,  GL.RGB, GL.UNSIGNED_BYTE, 0);
+		GL.texImage2D(GL.TEXTURE_2D, 0, format, width, height,  0,  GL.RGB, GL.UNSIGNED_BYTE, null);
 		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, repeat ? GL.REPEAT : GL.CLAMP_TO_EDGE);
 		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, repeat ? GL.REPEAT : GL.CLAMP_TO_EDGE);
 		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, filter);
 		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, filter);
-		GL.bindTexture(GL.TEXTURE_2D, null);
+		GL.bindTexture(GL.TEXTURE_2D, 0);
 		return tex;
 	}
   
@@ -66,7 +70,7 @@ class TextureUtils{
 		var tex = createTexture(bitmap.width, bitmap.height, repeat, GL.RGBA);
 		GL.bindTexture(GL.TEXTURE_2D, tex);
 		GL.texImage2D (GL.TEXTURE_2D, 0, GL.RGBA, bitmap.width, bitmap.height, 0, GL.RGBA, GL.UNSIGNED_BYTE, bitmap.image.data);
-		GL.bindTexture(GL.TEXTURE_2D, null);
+		GL.bindTexture(GL.TEXTURE_2D, 0);
 		return tex;
 	}
   
