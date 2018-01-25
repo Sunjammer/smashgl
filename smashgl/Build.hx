@@ -76,32 +76,26 @@ class Build{
             }
         }
 
-
-        try{
-            for(f in raw){
-                toInject.push(switch(f.kind){
-                    case FieldKind.FVar(_,_):
-                        var ex = f.expr();
-                        {
-                            name:strip(f.name),
-                            access: [APublic, AStatic, AInline],
-                            pos: Context.currentPos(),
-                            kind: toFieldTypeVar(ex),
-                            meta: [{name:":extern", pos:Context.currentPos()}]
-                        };
-                    case FieldKind.FMethod(kind):
-                        {
-                            name:strip(f.name),
-                            access: [APublic, AStatic, AInline],
-                            pos: Context.currentPos(),
-                            kind: toShim(f.type, f.name),
-                            meta: [{name:":extern", pos:Context.currentPos()}]
-                        }
-                });
-            }
-
-        }catch(e:Dynamic){
-            trace("Erreur: "+e);
+        for(f in raw){
+            toInject.push(switch(f.kind){
+                case FieldKind.FVar(_,_):
+                    var ex = f.expr();
+                    {
+                        name:strip(f.name),
+                        access: [APublic, AStatic, AInline],
+                        pos: Context.currentPos(),
+                        kind: toFieldTypeVar(ex),
+                        meta: [{name:":extern", pos:Context.currentPos()}]
+                    };
+                case FieldKind.FMethod(kind):
+                    {
+                        name:strip(f.name),
+                        access: [APublic, AStatic, AInline],
+                        pos: Context.currentPos(),
+                        kind: toShim(f.type, f.name),
+                        meta: [{name:":extern", pos:Context.currentPos()}]
+                    }
+            });
         }
         
         return fields.concat(toInject);
