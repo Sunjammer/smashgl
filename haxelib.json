@@ -1,0 +1,14 @@
+{
+  "name": "smashgl",
+  "url": "",
+  "license": "MIT",
+  "tags": [],
+  "description": "",
+  "version": "1.0.0",
+  "releasenote": "",
+  "contributors": ["decept404"],
+  "dependencies": {
+    "glm" : "",
+    "linc_opengl" : ""
+  }
+}
