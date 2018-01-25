@@ -6,8 +6,8 @@ class TextureUtils{
 
 	public static function makeTarget(width:Int, height:Int, isFloat:Bool = true):Target
     {
-        var fbo = GL.createFramebuffer();
-        var tex = GL.createTexture();
+        var fbo = GL.createFrameBuffers()[0];
+        var tex = GL.createTextures()[0];
         GL.bindFramebuffer(GL.FRAMEBUFFER, fbo);
         GL.bindTexture(GL.TEXTURE_2D, tex);
         GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGB16F, width, height, 0, GL.RGB, GL.UNSIGNED_BYTE, 0);
@@ -36,9 +36,7 @@ class TextureUtils{
     }
 
 	static public inline function createRenderTargetTexture(width:Int, height:Int){
-		var tmp = [0];
-        GL.createTextures(GL.TEXTURE_2D, 1, tmp);
-		var tex = tmp[0];
+        var tex = GL.createTextures()[0];
         GL.bindTexture(GL.TEXTURE_2D, tex);
         GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGB16F, width, height, 0, GL.RGB, GL.UNSIGNED_BYTE, 0);
         GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, GL.CLAMP_TO_EDGE);
@@ -51,10 +49,7 @@ class TextureUtils{
 
 	static public inline function createTexture(width:Int, height:Int, repeat:Bool = false, format:Int = GL.RGBA, filter:Int = GL.LINEAR)
 	{
-		var tmp = [0];
-		trace("Yeah!");
-		GL.createTextures(GL.TEXTURE_2D, 1, tmp);
-		var tex = tmp[0];
+        var tex = GL.createTextures()[0];
 		GL.bindTexture(GL.TEXTURE_2D, tex);
 		GL.texImage2D(GL.TEXTURE_2D, 0, format, width, height,  0,  GL.RGB, GL.UNSIGNED_BYTE, null);
 		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, repeat ? GL.REPEAT : GL.CLAMP_TO_EDGE);

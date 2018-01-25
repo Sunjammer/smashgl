@@ -35,7 +35,6 @@ class Build{
             }
             return true;
         });
-        trace(raw.length+" linc fields to map");
 
         function toFieldTypeVar(expr:TypedExpr):FieldType{
             expr.pos = Context.currentPos();
