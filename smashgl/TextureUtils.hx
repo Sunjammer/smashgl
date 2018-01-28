@@ -1,16 +1,15 @@
 package smashgl;
-
-import openfl.Assets;
-
+import smashgl.GL.RenderTarget;
 class TextureUtils{
 
-	public static function makeTarget(width:Int, height:Int, isFloat:Bool = true):Target
+	public static function makeTarget(width:Int, height:Int, isFloat:Bool = true):RenderTarget
     {
-        var fbo = GL.createFrameBuffers()[0];
+        var fbo = GL.createFramebuffers()[0];
         var tex = GL.createTextures()[0];
+		var t = isFloat?GL.RGBA16F:GL.RGBA;
         GL.bindFramebuffer(GL.FRAMEBUFFER, fbo);
         GL.bindTexture(GL.TEXTURE_2D, tex);
-        GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGB16F, width, height, 0, GL.RGB, GL.UNSIGNED_BYTE, 0);
+        GL.texImage2DAlloc(GL.TEXTURE_2D, 0, t, width, height, 0, t, GL.UNSIGNED_BYTE);
         GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, GL.CLAMP_TO_EDGE);
         GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, GL.CLAMP_TO_EDGE);
         GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, GL.LINEAR);
@@ -32,13 +31,13 @@ class TextureUtils{
 				trace("Check frame buffer: " + status);
 		}
 
-        return { tex:tex, fbo:fbo };
+        return { texture:tex, fbo:fbo };
     }
 
-	static public inline function createRenderTargetTexture(width:Int, height:Int){
+	static public inline function createRenderTargetTexture(width:Int, height:Int):Int{
         var tex = GL.createTextures()[0];
         GL.bindTexture(GL.TEXTURE_2D, tex);
-        GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGB16F, width, height, 0, GL.RGB, GL.UNSIGNED_BYTE, 0);
+        GL.texImage2DAlloc(GL.TEXTURE_2D, 0, GL.RGB16F, width, height, 0, GL.RGB, GL.UNSIGNED_BYTE);
         GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, GL.CLAMP_TO_EDGE);
         GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, GL.CLAMP_TO_EDGE);
         GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, GL.NEAREST);
@@ -47,11 +46,11 @@ class TextureUtils{
 		return tex;
 	}
 
-	static public inline function createTexture(width:Int, height:Int, repeat:Bool = false, format:Int = GL.RGBA, filter:Int = GL.LINEAR)
+	static public inline function createTexture(width:Int, height:Int, repeat:Bool = false, format:Int = GL.RGBA, filter:Int = GL.LINEAR):Int
 	{
         var tex = GL.createTextures()[0];
 		GL.bindTexture(GL.TEXTURE_2D, tex);
-		GL.texImage2D(GL.TEXTURE_2D, 0, format, width, height,  0,  GL.RGB, GL.UNSIGNED_BYTE, null);
+		GL.texImage2DAlloc(GL.TEXTURE_2D, 0, format, width, height,  0,  GL.RGB, GL.UNSIGNED_BYTE);
 		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, repeat ? GL.REPEAT : GL.CLAMP_TO_EDGE);
 		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, repeat ? GL.REPEAT : GL.CLAMP_TO_EDGE);
 		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, filter);
@@ -60,11 +59,11 @@ class TextureUtils{
 		return tex;
 	}
   
- 	static public inline function createTextureFromBitmap(path:String, repeat:Bool = false){
-		var bitmap = Assets.getBitmapData(path);
-		var tex = createTexture(bitmap.width, bitmap.height, repeat, GL.RGBA);
+ 	static public inline function createTextureFromBitmap(path:String, repeat:Bool = false):Int{
+		var img = Assets.getImage(path);
+		var tex = createTexture(img.width, img.height, repeat, GL.RGBA);
 		GL.bindTexture(GL.TEXTURE_2D, tex);
-		GL.texImage2D (GL.TEXTURE_2D, 0, GL.RGBA, bitmap.width, bitmap.height, 0, GL.RGBA, GL.UNSIGNED_BYTE, bitmap.image.data);
+		GL.texImage2D (GL.TEXTURE_2D, 0, GL.RGBA, img.width, img.height, 0, GL.RGBA, GL.UNSIGNED_BYTE, img.data.getData());
 		GL.bindTexture(GL.TEXTURE_2D, 0);
 		return tex;
 	}

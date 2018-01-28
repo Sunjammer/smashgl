@@ -9,6 +9,7 @@
   "contributors": ["decept404"],
   "dependencies": {
     "glm" : "",
-    "linc_opengl" : ""
+    "linc_opengl" : "",
+    "linc_stb" : ""
   }
 }
