@@ -1,4 +1,5 @@
 package smashgl;
+using StringTools;
 
 enum ShaderSource{
 	Vertex(src:String);
@@ -13,6 +14,35 @@ typedef GLAttributeLocation = Int;
 
 class Shader {
 	
+	public static function fromCombinedSource(src:String):Shader{
+        var lines = src.split("\n");
+        var state:String = "common";
+        var blocks = new Map<String,String>();
+        var buf = [];
+        for(l in lines){
+            if(l.indexOf("#pragma")>-1){
+                var tag = l.split(" ")[1].toLowerCase().trim();
+                switch(tag){
+                    case "vertex"|"fragment":
+                        blocks[state] = buf.join("\n");
+                        buf = [];
+                        state = tag;
+                    default:
+                        buf.push(l);
+                }
+            }else{
+                buf.push(l);
+            }
+        }
+        blocks[state] = buf.join("\n");
+        for(k in blocks.keys()){
+            if(k=="common")continue;
+            blocks[k] = blocks["common"] + blocks[k];
+        }
+        blocks.remove("common");
+        return new Shader([Vertex(blocks["vertex"]), Fragment(blocks["fragment"])]);
+	}
+
 	public var name:String;
 	var program:GLProgram;
 	var sources:Array<ShaderSource>;
