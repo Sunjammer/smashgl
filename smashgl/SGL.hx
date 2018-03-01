@@ -1,38 +1,51 @@
 package smashgl;
 import haxe.io.*;
+import opengl.GL.*;
 
 typedef RenderTarget = {
 	texture:Int,
 	fbo:Int
 }
 
-@:build(smashgl.Build.init("opengl.GL"))
-class GL{
+//@:build(smashgl.Build.init("opengl.GL"))
+class SGL{
 
 	public static inline function init() : Void
 	{
+		trace("Init glew");
 		glew.GLEW.init();
+	}
+	
+	public static inline function check(?pos:haxe.PosInfos):Bool{
+		var error:Int = 0;
+		var e = true;
+		while ((error = glGetError()) != 0) {
+			e = false;
+			haxe.Log.trace('GL error: ' + error, pos);
+		}
+		return e;
+		//if(e) throw "Blah";
 	}
 
 	public inline static function toFloatArrayBytesData(a:Array<Float>):BytesData{
 		return haxe.io.Float32Array.fromArray(a).getData().bytes.getData();
 	}
 
-	public inline static function createTextures(num:Int = 1, type:Int = TEXTURE_2D):Array<Int>{
+	public inline static function createTextures(num:Int = 1, type:Int = GL_TEXTURE_2D):Array<Int>{
 		var tmp = [];
-		opengl.GL.glCreateTextures(type, num, tmp);
+		glCreateTextures(type, num, tmp);
 		return tmp;
 	}
 
 	public inline static function createFramebuffers(num:Int = 1):Array<Int>{
 		var tmp = [];
-		opengl.GL.glCreateFramebuffers(num, tmp);
+		glCreateFramebuffers(num, tmp);
 		return tmp;
 	}
 
 	public inline static function createRenderbuffers(num:Int = 1):Array<Int>{
 		var tmp = [];
-		opengl.GL.glCreateRenderbuffers(num, tmp);
+		glCreateRenderbuffers(num, tmp);
 		return tmp;
 	}
 

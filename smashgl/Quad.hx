@@ -1,36 +1,34 @@
 package smashgl;
-import lime.graphics.opengl.GL;
-import lime.graphics.opengl.GLBuffer;
-import lime.utils.Float32Array;
+import opengl.GL.*;
 
 class Quad {
 	
     static var vbo:GLBuffer;
 
     static function prepare(){
-			if (vbo != null) GL.deleteBuffer(vbo);
-				vbo = GL.createBuffer();
-				
-			var vertices:Array<Float> = [
-				-1, -1, 0, 0,
-				1, -1, 1, 0,
-				1, 1, 1, 1,
-				-1, 1, 0, 1
-			];
+		if (vbo != null) glDeleteBuffer(vbo);
+			vbo = glCreateBuffer();
 			
-			GL.bindBuffer(GL.ARRAY_BUFFER, vbo);
-			GL.bufferData(GL.ARRAY_BUFFER, 4 * Float32Array.BYTES_PER_ELEMENT * vertices.length, new Float32Array(vertices), GL.STATIC_DRAW);
-			GL.bindBuffer(GL.ARRAY_BUFFER, null);
+		var vertices:Array<Float> = [
+			-1, -1, 0, 0,
+			1, -1, 1, 0,
+			1, 1, 1, 1,
+			-1, 1, 0, 1
+		];
+		
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBufferData(GL_ARRAY_BUFFER, 4 * 4 * vertices.length, new Float32Array(vertices), GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, null);
     }
 
     public static inline function bind(){
-			if(vbo==null) prepare();
-			GL.bindBuffer(GL.ARRAY_BUFFER, vbo);
+		if(vbo==null) prepare();
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
     }
-		public static inline function draw(){
-			GL.drawArrays(GL.TRIANGLE_FAN, 0, 4);
-		}
+	public static inline function draw(){
+		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+	}
     public static inline function release(){
-			GL.bindBuffer(GL.ARRAY_BUFFER, null);
+		glBindBuffer(GL_ARRAY_BUFFER, null);
     }
 }
