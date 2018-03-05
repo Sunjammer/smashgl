@@ -7,7 +7,6 @@ typedef RenderTarget = {
 	fbo:Int
 }
 
-//@:build(smashgl.Build.init("opengl.GL"))
 class SGL{
 
 	public static inline function init() : Void
@@ -24,28 +23,27 @@ class SGL{
 			haxe.Log.trace('GL error: ' + error, pos);
 		}
 		return e;
-		//if(e) throw "Blah";
 	}
 
 	public inline static function toFloatArrayBytesData(a:Array<Float>):BytesData{
 		return haxe.io.Float32Array.fromArray(a).getData().bytes.getData();
 	}
 
-	public inline static function createTextures(num:Int = 1, type:Int = GL_TEXTURE_2D):Array<Int>{
+	public static function createTextures(num:Int = 1, type:Int = GL_TEXTURE_2D):Array<Int>{
 		var tmp = [];
-		glCreateTextures(type, num, tmp);
+		glGenTextures(num, tmp);
 		return tmp;
 	}
 
 	public inline static function createFramebuffers(num:Int = 1):Array<Int>{
 		var tmp = [];
-		glCreateFramebuffers(num, tmp);
+		glGenFramebuffers(num, tmp);
 		return tmp;
 	}
 
 	public inline static function createRenderbuffers(num:Int = 1):Array<Int>{
 		var tmp = [];
-		glCreateRenderbuffers(num, tmp);
+		glGenRenderbuffers(num, tmp);
 		return tmp;
 	}
 
