@@ -15,14 +15,20 @@ class SGL{
 		glew.GLEW.init();
 	}
 	
-	public static inline function check(?pos:haxe.PosInfos):Bool{
-		var error:Int = 0;
-		var e = true;
-		while ((error = glGetError()) != 0) {
-			e = false;
-			haxe.Log.trace('GL error: ' + error, pos);
-		}
-		return e;
+	public static inline function check(prefix:String = "", ?pos:haxe.PosInfos):Bool{
+		#if debug
+			var error:Int = 0;
+			var e = true;
+			var count = 0;
+			while ((error = glGetError()) != 0 && count++ < 20) {
+				e = false;
+				haxe.Log.trace(prefix+': GL error: ' + error, pos);
+			}
+			return e;
+		#else
+			return true; //If not debug just pass thru
+		#end
+
 	}
 
 	public inline static function toFloatArrayBytesData(a:Array<Float>):BytesData{
