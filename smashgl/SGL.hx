@@ -56,7 +56,7 @@ class SGL{
 	public static inline function getProgramInfoLog(program:Int) : String
 	{ 
 		untyped __cpp__("char __buffer[4096]; glGetProgramInfoLog({0}, 4096, (GLsizei*)0, &__buffer[0]);", program); 
-		return untyped __cpp__("::String(__buffer);");
+		return untyped __cpp__("::String(__buffer)");
 	}
 
 	public static inline function getShaderInfoLog(shader:Int) : String
