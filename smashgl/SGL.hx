@@ -2,11 +2,6 @@ package smashgl;
 import haxe.io.*;
 import opengl.GL.*;
 
-typedef RenderTarget = {
-	texture:Int,
-	fbo:Int
-}
-
 class SGL{
 
 	public static inline function init() : Void
